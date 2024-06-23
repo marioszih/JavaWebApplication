@@ -35,7 +35,7 @@
                         <td>${user.value.name}</td>
                         <td>${user.value.surname}</td>
                         <td>
-                        	<a class="btn btn-primary" href="${pageContext.request.contextPath}/userDetails?id=${user.value.id}">View Details</a>
+                        	<a class="btn btn-primary" href="${pageContext.request.contextPath}/userDetails?id=${user.value.id}" target = "_blank">View Details</a>
 	                        <form method="post" action="${pageContext.request.contextPath}/display" style="display:inline;">
                                 <input type="hidden" name="userId" value="${user.value.id}" />
                                 <input type="hidden" name="action" value="delete" />
