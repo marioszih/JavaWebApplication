@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import org.eclipse.jdt.core.compiler.InvalidInputException;
 
-import engine.UserManagerInterface;
 import engine.UserManager;
 
 
@@ -29,7 +28,7 @@ public class RegisterServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UserManagerInterface userMng = UserManager.getSingleton();
+		UserManager userMng = UserManager.getSingleton();
 		String name = request.getParameter("name");
 		String surname = request.getParameter("surname");
 		String gender = request.getParameter("gender");
@@ -47,8 +46,8 @@ public class RegisterServlet extends HttpServlet {
         response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/"));
     }
 
-    protected void checkValidity(String... strings) throws InvalidInputException {
-        for (String s : strings) {
+    protected void checkValidity(String... userDetails) throws InvalidInputException {
+        for (String s : userDetails) {
             if (s == null || s.isBlank()) {
                 throw new InvalidInputException(s + " is empty or null: ");
             }

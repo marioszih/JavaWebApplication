@@ -10,14 +10,19 @@ import java.util.HashMap;
 import connector.ConnectionManager;
 import model.User;
 
-public class UserManager implements UserManagerInterface{
-	private Connection con = null;
+public class UserManager {
+	private Connection con = ConnectionManager.getConnection();;
 	private ResultSet rs = null;
 	private static UserManager userMng = new UserManager();
 	private HashMap<Integer,User> users = new HashMap<>();
 	
 	public UserManager() {}
 	
+	//This constructor is used for testing purposes
+    public UserManager(Connection con) {
+        this.con = con;
+    }
+    
 	public static UserManager getSingleton()
 	{
 		if(userMng == null)
@@ -25,7 +30,6 @@ public class UserManager implements UserManagerInterface{
 		return userMng;
 	}
 
-    @Override
     public void registerUserToDb(String name, String surname, String gender, String date, String workAdrress, String homeAddress) {
     	char sqlGender = (gender.equals("Male")) ? 'M' : 'F';
     	Date sqlBirthDate = formatDate(date);
@@ -34,7 +38,6 @@ public class UserManager implements UserManagerInterface{
         String insertAddressesSql = "INSERT INTO addresses (UserId, WorkAddress, HomeAddress) VALUES (?, ?, ?)";
         
         try {
-        	con = ConnectionManager.getConnection();
             PreparedStatement insertUserStmt = con.prepareStatement(insertUserSql);
             PreparedStatement getLastIdStmt = con.prepareStatement(getLastIdSql);
             PreparedStatement insertAddressesStmt = con.prepareStatement(insertAddressesSql);
@@ -59,7 +62,6 @@ public class UserManager implements UserManagerInterface{
             insertUserStmt.close();
             getLastIdStmt.close();
             insertAddressesStmt.close();
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -67,14 +69,12 @@ public class UserManager implements UserManagerInterface{
 
 
 
-	@Override
     public HashMap<Integer,User> displayUsers() {
 		String fetchUsersSql = "SELECT users.UserId, users.Name, users.Surname, users.Gender, users.Birthdate, addresses.WorkAddress, addresses.HomeAddress "
 							+ "FROM users "
 							+ "JOIN addresses ON users.UserId = addresses.UserId";
 		
     	try {
-	    	con = ConnectionManager.getConnection();
 	    	PreparedStatement displayUsersStmt = con.prepareStatement(fetchUsersSql);
 	    	rs = displayUsersStmt.executeQuery();
 	    	while (rs.next()) {
@@ -90,7 +90,6 @@ public class UserManager implements UserManagerInterface{
 		            users.put(rs.getInt("UserId"), user);
 	    		}
 	    	}
-	        con.close();
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
@@ -110,12 +109,10 @@ public class UserManager implements UserManagerInterface{
     	return Date.valueOf(formatedDate);
 	}
 
-	@Override
 	public void deleteUser(int userId) {
 		String deleteFromAddresses = "DELETE FROM addresses WHERE UserId = ?"; //First delete from addresses becuase userId is a foreign key
     	String deleteFromUsers = "DELETE FROM users WHERE UserId = ?";
     	try {
-    		con = ConnectionManager.getConnection();
 			PreparedStatement deleteUserFromAddresses = con.prepareStatement(deleteFromAddresses);
 			deleteUserFromAddresses.setInt(1, userId);
 			deleteUserFromAddresses.executeUpdate();
@@ -124,7 +121,6 @@ public class UserManager implements UserManagerInterface{
 			deleteUserFromUsers.setInt(1, userId);
 			deleteUserFromUsers.executeUpdate();
 			users.remove(userId);
-			con.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

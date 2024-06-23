@@ -11,7 +11,6 @@ import model.User;
 import java.io.IOException;
 
 import engine.UserManager;
-import engine.UserManagerInterface;
 
 @WebServlet(name = "UserDetails", urlPatterns = "/userDetails")
 public class UserDetailsServlet extends HttpServlet {
@@ -26,7 +25,7 @@ public class UserDetailsServlet extends HttpServlet {
 		String strUserId = request.getParameter("id");
 		if(strUserId != null) {
 			int userId = Integer.parseInt(strUserId);
-			UserManagerInterface userMng = UserManager.getSingleton();
+			UserManager userMng = UserManager.getSingleton();
 			User user = userMng.findUserById(userId);
 			request.setAttribute("user", user);
 		}

@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import engine.UserManager;
-import engine.UserManagerInterface;
 
 @WebServlet(name = "Display", urlPatterns = "/display")
 public class DisplayServlet extends HttpServlet {
@@ -24,7 +23,7 @@ public class DisplayServlet extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UserManagerInterface userMng = UserManager.getSingleton();
+		UserManager userMng = UserManager.getSingleton();
 		HashMap<Integer,User> userLst = userMng.displayUsers();
 		request.setAttribute("users", userLst);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("gui/DisplayUsers.jsp");
@@ -32,7 +31,7 @@ public class DisplayServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UserManagerInterface userMng = UserManager.getSingleton();
+		UserManager userMng = UserManager.getSingleton();
         String action = request.getParameter("action");
         if (action.equals("delete")) {
         	int userId = Integer.parseInt(request.getParameter("userId"));
