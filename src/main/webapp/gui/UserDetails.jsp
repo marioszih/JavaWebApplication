@@ -41,7 +41,7 @@
 	<div class="container">
 		  <div class="row">
 		    <div class="col text-center">
-		      <a class="btn btn-danger" href="/JavaWebApp/display" role="button">Back</a>
+		      <a class="btn btn-danger" href="javascript:;" onclick="window.close()" role="button">Back</a>
 		    </div>
 		  </div>
 		</div>
